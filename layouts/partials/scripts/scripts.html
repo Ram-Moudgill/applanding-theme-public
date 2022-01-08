@@ -35,3 +35,45 @@
 <!-- <link defer="defer" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
         integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w=="
         crossorigin="anonymous" referrerpolicy="no-referrer" /> -->
+
+{{ if .Site.Params.formSubmissionApi }}
+<script>
+        const forms = document.getElementsByClassName('site-forms')
+        Array.from(forms).map(form => {
+                form.addEventListener('submit', (e) => {
+                        e.preventDefault()
+                        let formName = e.target.dataset.name
+                        let elements = e.target.elements
+                        let formSubmissionInputs = []
+                        Array.from(elements).map(element => {
+                                if (element.dataset.type === 'submit') {
+                                        formSubmissionInputs.push(element)
+                                }
+                        })
+                        let formBody = {}
+                        formSubmissionInputs.map(formInput => {
+                                formBody[formInput.name] = formInput.value
+                        })
+                        let data = {
+                                formId: e.target.id,
+                                formName: formName,
+                                formBody: formBody
+                        }
+                        fetch('{{.Site.Params.formSubmissionApi}}', {
+                                method: 'POST',
+                                headers: {
+                                        'Content-Type': 'application/json',
+                                },
+                                body: JSON.stringify(data),
+                        })
+                                .then(response => response.json())
+                                .then(data => {
+                                        // console.log(e.target.dataset.successMessage)
+                                })
+                                .catch((error) => {
+                                        // console.log(e.target.dataset.failedMessage)
+                                });
+                })
+        })
+</script>
+{{ end }}
