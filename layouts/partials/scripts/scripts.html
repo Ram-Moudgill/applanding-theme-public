@@ -50,9 +50,17 @@
                                         formSubmissionInputs.push(element)
                                 }
                         })
-                        let formBody = {}
+                        let formBody = [
+                        ]
                         formSubmissionInputs.map(formInput => {
-                                formBody[formInput.name] = formInput.value
+                                console.log(formInput)
+                                let object = {
+                                        "fieldId": formInput.id,
+                                        "name": formInput.name,
+                                        "value": formInput.value,
+                                        "fieldType": formInput.type
+                                }
+                                formBody.push(object)
                         })
                         let data = {
                                 formId: e.target.id,
