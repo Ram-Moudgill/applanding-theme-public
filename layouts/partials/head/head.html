@@ -84,14 +84,10 @@
     {{end}}
     {{end}}
     {{ if .Site.Params.originalCssPath}}
-    {{range .Site.Params.originalCssPath}}
-    <link rel='stylesheet' href='{{.}}' />
-    {{end}}
+    <link rel='stylesheet' href='{{.Site.Params.originalCssPath}}' />
     {{end}}
     {{ if .Site.Params.updatedCssPath}}
-    {{range .Site.Params.updatedCssPath}}
-    <link rel='stylesheet' href='{{.}}' />
-    {{end}}
+    <link rel='stylesheet' href='{{.Site.Params.updatedCssPath}}' />
     {{end}}
     {{ partial "head/intergrations.html" .}}
 </head>
