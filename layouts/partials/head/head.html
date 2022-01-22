@@ -87,9 +87,11 @@
     {{range .Site.Params.originalCssPath}}
     <link rel='stylesheet' href='{{.}}' />
     {{end}}
+    {{end}}
     {{ if .Site.Params.updatedCssPath}}
     {{range .Site.Params.updatedCssPath}}
     <link rel='stylesheet' href='{{.}}' />
+    {{end}}
     {{end}}
     {{ partial "head/intergrations.html" .}}
 </head>
