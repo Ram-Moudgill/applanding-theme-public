@@ -52,6 +52,7 @@
                 form.addEventListener('submit', (e) => {
                         e.preventDefault()
                         let formName = e.target.dataset.name
+                        let siteId = e.target.dataset.siteid
                         let elements = e.target.elements
                         let formSubmissionInputs = []
                         Array.from(elements).map(element => {
@@ -62,7 +63,6 @@
                         let formBody = [
                         ]
                         formSubmissionInputs.map(formInput => {
-                                console.log(formInput)
                                 let object = {
                                         "fieldId": formInput.id,
                                         "name": formInput.name,
@@ -74,6 +74,7 @@
                         let data = {
                                 formId: e.target.id,
                                 formName: formName,
+                                siteId: siteId,
                                 formBody: formBody
                         }
                         fetch('{{.Site.Params.formSubmissionApi}}', {
@@ -85,12 +86,17 @@
                         })
                                 .then(response => response.json())
                                 .then(data => {
-                                        // console.log(e.target.dataset.successMessage)
+                                        document.getElementById('toast-type').innerText = 'Success'
+                                        document.getElementById('toast-message').innerText = data
+                                        $('.toast').toast('show');
                                 })
                                 .catch((error) => {
-                                        // console.log(e.target.dataset.failedMessage)
+                                        document.getElementById('toast-type').innerText = 'Error'
+                                        document.getElementById('toast-message').innerText = error
+                                        $('.toast').toast('show');
                                 });
                 })
         })
 </script>
+
 {{ end }}
