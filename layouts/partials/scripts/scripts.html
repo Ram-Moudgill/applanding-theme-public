@@ -87,12 +87,12 @@
                                 .then(response => response.json())
                                 .then(data => {
                                         document.getElementById('toast-type').innerText = 'Success'
-                                        document.getElementById('toast-message').innerText = data
+                                        document.getElementById('toast-message').innerText = data.data
                                         $('.toast').toast('show');
                                 })
                                 .catch((error) => {
                                         document.getElementById('toast-type').innerText = 'Error'
-                                        document.getElementById('toast-message').innerText = error
+                                        document.getElementById('toast-message').innerText = error.data
                                         $('.toast').toast('show');
                                 });
                 })
