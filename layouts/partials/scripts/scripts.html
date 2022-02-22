@@ -41,15 +41,13 @@
                 d.head.appendChild(c);
         })();
 </script>
-<!-- <link defer="defer" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
-        integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w=="
-        crossorigin="anonymous" referrerpolicy="no-referrer" /> -->
-
 {{ if .Site.Params.formSubmissionApi }}
 <script>
         const forms = document.getElementsByClassName('site-forms')
         Array.from(forms).map(form => {
                 form.addEventListener('submit', (e) => {
+                        let calls = 2
+                        let time = 0
                         e.preventDefault()
                         let formName = e.target.dataset.name
                         let siteId = e.target.dataset.siteid
@@ -77,24 +75,43 @@
                                 siteId: siteId,
                                 formBody: formBody
                         }
-                        fetch('{{.Site.Params.formSubmissionApi}}', {
-                                method: 'POST',
-                                headers: {
-                                        'Content-Type': 'application/json',
-                                },
-                                body: JSON.stringify(data),
-                        })
-                                .then(response => response.json())
-                                .then(data => {
-                                        document.getElementById('toast-type').innerText = 'Success'
-                                        document.getElementById('toast-message').innerText = data.data
-                                        $('.toast').toast('show');
+                        let submitForm = () => {
+                                document.getElementById('liveToast').dataset.delay = '10000'
+                                document.getElementById('toast-type').innerText = ''
+                                document.getElementById('toast-message').innerText = 'Please wait while we are submitting your information to server'
+                                $('.toast').toast('show');
+                                fetch('{{.Site.Params.formSubmissionApi}}', {
+                                        method: 'POST',
+                                        headers: {
+                                                'Content-Type': 'application/json',
+                                        },
+                                        body: JSON.stringify(data),
                                 })
-                                .catch((error) => {
-                                        document.getElementById('toast-type').innerText = 'Error'
-                                        document.getElementById('toast-message').innerText = error.data
-                                        $('.toast').toast('show');
-                                });
+                                        .then(response => response.json())
+                                        .then(data => {
+                                                document.getElementById('toast-type').innerText = 'Success'
+                                                document.getElementById('toast-message').innerText = data.data ? data.data : 'Success'
+                                                document.getElementById('liveToast').dataset.delay = '3000'
+                                                $('.toast').toast('show');
+                                        })
+                                        .catch((error) => {
+                                                if (calls === 0) {
+                                                        document.getElementById('liveToast').dataset.delay = '3000'
+                                                        document.getElementById('toast-type').innerText = 'Error'
+                                                        document.getElementById('toast-message').innerText = error.data ? error.data : 'Something went wrong'
+                                                        $('.toast').toast('show');
+                                                }
+                                                else {
+                                                        time = calls >= 2 ? 5000 : 10000
+                                                        setTimeout(() => {
+                                                                submitForm()
+                                                        }, time);
+                                                }
+                                                calls = calls - 1
+
+                                        });
+                        }
+                        submitForm()
                 })
         })
 </script>
